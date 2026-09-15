@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300">
+  <title>FitPulse</title>
+  <g transform="translate(20,20) scale(.5078)">
+    <path d="M145 126 C145 108 159 94 177 94 H342 C361 94 376 109 376 128 C376 147 361 162 342 162 H213 V211 H315 C334 211 349 226 349 245 C349 264 334 279 315 279 H213 V386 C213 405 198 420 179 420 C160 420 145 405 145 386 Z" fill="#111318"/>
+    <path d="M238 184 C238 166 253 151 271 151 H337 C387 151 423 187 423 237 C423 287 387 322 337 322 H306 V386 C306 405 291 420 272 420 C253 420 238 405 238 386 Z M306 220 V254 H335 C349 254 356 247 356 237 C356 227 349 220 335 220 Z" fill="#18B87A"/>
+  </g>
+  <text x="270" y="195" font-family="Inter, Arial, Helvetica, sans-serif" font-size="132" font-weight="700" letter-spacing="-6">
+    <tspan fill="#111318">Fit</tspan><tspan fill="#18B87A">Pulse</tspan>
+  </text>
+</svg>
