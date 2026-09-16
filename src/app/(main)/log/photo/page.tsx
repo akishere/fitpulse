@@ -73,25 +73,33 @@ export default function LogPhotoPage() {
     setAnalysis(analysis.map((it, idx) => (idx === i ? { ...it, ...patch } : it)));
   }
 
-  function confirm() {
+  async function confirm() {
     if (!analysis) return;
     const today = new Date().toISOString().slice(0, 10);
-    analysis.forEach((a) => {
-      logMeal({
-        log_date: today,
-        meal_slot: slot,
-        food_item: `${a.name} (${a.portion})`,
-        calories: Number(a.calories) || 0,
-        protein_g: Number(a.protein_g) || 0,
-        carbs_g: Number(a.carbs_g) || 0,
-        fat_g: Number(a.fat_g) || 0,
-        photo_url: preview ?? undefined,
-        source: "photo_ai",
-      });
-    });
-    toast.success(`Logged to ${mealLabel(slot)}`);
-    setAnalysis(null);
-    setPreview(null);
+    try {
+      await Promise.all(
+        analysis.map((a) =>
+          logMeal({
+            log_date: today,
+            meal_slot: slot,
+            food_item: `${a.name} (${a.portion})`,
+            calories: Number(a.calories) || 0,
+            protein_g: Number(a.protein_g) || 0,
+            carbs_g: Number(a.carbs_g) || 0,
+            fat_g: Number(a.fat_g) || 0,
+            photo_url: preview ?? undefined,
+            source: "photo_ai",
+          })
+        )
+      );
+      toast.success(`Logged to ${mealLabel(slot)}`);
+      setAnalysis(null);
+      setPreview(null);
+    } catch (err) {
+      toast.error(
+        err instanceof Error ? err.message : "Couldn't save meal log"
+      );
+    }
   }
 
   return (
