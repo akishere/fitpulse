@@ -20,6 +20,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/lib/store/user-store";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
+import { getSiteUrl } from "@/lib/utils/site-url";
 
 type Stage = "form" | "check-email";
 
@@ -56,7 +57,7 @@ export default function SignupPage() {
 
     const supabase = getSupabaseBrowser();
     if (supabase) {
-      const redirectTo = `${window.location.origin}/auth/callback`;
+      const redirectTo = `${getSiteUrl()}/auth/callback`;
       const { data, error } = await supabase.auth.signUp({
         email,
         password,
@@ -152,7 +153,7 @@ export default function SignupPage() {
       type: "signup",
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${getSiteUrl()}/auth/callback`,
       },
     });
     if (error) {

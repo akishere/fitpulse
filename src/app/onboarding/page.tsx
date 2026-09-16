@@ -20,8 +20,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Counter } from "@/components/ui/counter";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils/cn";
 import { useUserStore } from "@/lib/store/user-store";
+import { getSupabaseBrowser } from "@/lib/supabase/client";
+import { upsertProfile } from "@/lib/supabase/profile";
 import type {
   ActivityLevel,
   Gender,
@@ -131,12 +134,11 @@ export default function OnboardingPage() {
 
   async function onFinish() {
     setSubmitting(true);
-    await new Promise((r) => setTimeout(r, 700));
-    setProfile({
+    const nextProfile = {
       id: profile?.id ?? "local",
       email: profile?.email ?? "",
       name,
-      role: profile?.role ?? "user",
+      role: profile?.role ?? "user" as const,
       age: Number(age),
       gender,
       height_cm: Number(heightCm),
@@ -150,8 +152,22 @@ export default function OnboardingPage() {
       carb_target_g: macros.carbs_g,
       fat_target_g: macros.fat_g,
       thyrox_dose_mg: thyrox ? Number(thyrox) : undefined,
-    });
+    };
+
+    // Persist to Supabase (source of truth for future logins).
+    const supabase = getSupabaseBrowser();
+    if (supabase) {
+      const result = await upsertProfile(supabase, nextProfile);
+      if (!result.ok) {
+        setSubmitting(false);
+        toast.error(`Couldn't save profile: ${result.error ?? "unknown"}`);
+        return;
+      }
+    }
+
+    setProfile(nextProfile);
     completeOnboarding();
+    setSubmitting(false);
     router.push("/dashboard");
   }
 

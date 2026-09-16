@@ -18,6 +18,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUserStore } from "@/lib/store/user-store";
 import { getSupabaseBrowser } from "@/lib/supabase/client";
+import {
+  dbRowToProfile,
+  fetchProfile,
+  isOnboarded,
+} from "@/lib/supabase/profile";
+import { getSiteUrl } from "@/lib/utils/site-url";
 
 function LoginInner() {
   const router = useRouter();
@@ -28,6 +34,7 @@ function LoginInner() {
   const [needsConfirm, setNeedsConfirm] = useState(false);
   const [resendIn, setResendIn] = useState(0);
   const profile = useUserStore((s) => s.profile);
+  const setProfile = useUserStore((s) => s.setProfile);
   const completeOnboarding = useUserStore((s) => s.completeOnboarding);
   const setAuthed = useUserStore((s) => s.setAuthed);
 
@@ -73,7 +80,11 @@ function LoginInner() {
       }
       setAuthed(true);
       if (data.user?.email_confirmed_at) {
-        if (profile?.goal) {
+        // Source of truth is the DB row, not local Zustand — a fresh
+        // browser or new device won't have any local state.
+        const row = await fetchProfile(supabase);
+        if (row) setProfile(dbRowToProfile(row));
+        if (isOnboarded(row)) {
           completeOnboarding();
           router.push("/dashboard");
         } else {
@@ -104,7 +115,7 @@ function LoginInner() {
       type: "signup",
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
+        emailRedirectTo: `${getSiteUrl()}/auth/callback`,
       },
     });
     if (error) {
