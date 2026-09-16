@@ -22,10 +22,12 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
   icons: {
     icon: [
-      { url: "/assets/favicon-32.png", sizes: "32x32", type: "image/png" },
-      { url: "/assets/favicon-16.png", sizes: "16x16", type: "image/png" },
       { url: "/assets/favicon.svg", type: "image/svg+xml" },
+      { url: "/assets/icon-16.png", sizes: "16x16", type: "image/png" },
+      { url: "/assets/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/assets/icon-48.png", sizes: "48x48", type: "image/png" },
     ],
+    shortcut: "/assets/favicon.ico",
     apple: [{ url: "/assets/apple-touch-icon.png", sizes: "180x180" }],
   },
   appleWebApp: {

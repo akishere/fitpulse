@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 import {
   ChevronRight,
   FileUp,
@@ -15,11 +17,18 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useUserStore } from "@/lib/store/user-store";
+import { signOut } from "@/lib/auth/sign-out";
 
 export default function SettingsPage() {
+  const router = useRouter();
   const profile = useUserStore((s) => s.profile);
-  const reset = useUserStore((s) => s.reset);
   const isAdmin = profile?.role === "admin";
+
+  async function handleSignOut() {
+    await signOut();
+    toast.success("Signed out");
+    router.replace("/login");
+  }
 
   return (
     <PageShell>
@@ -95,7 +104,7 @@ export default function SettingsPage() {
       <div className="mt-8">
         <Button
           variant="ghost"
-          onClick={() => reset()}
+          onClick={handleSignOut}
           className="text-accent-red hover:text-accent-red"
         >
           <LogOut className="h-4 w-4" /> Sign out

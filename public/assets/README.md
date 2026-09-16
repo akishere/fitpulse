@@ -7,39 +7,44 @@ Selected concept: **#2 — FP Monogram**
 - FitPulse Green: `#18B87A`
 - Optional neutral background: `#F5F7FA`
 
-## Recommended React/Node placement
+## Usage
 
-Copy the assets into:
-`public/brand/`
+The app serves everything from `/assets/…`. Wire via the `Logo` component:
 
-Then use:
+```tsx
+import { Logo } from "@/components/layout/logo";
 
-```jsx
-<img src="/brand/fitpulse-logo.svg" alt="FitPulse" />
+<Logo />              // monogram + "FitPulse" wordmark, size md
+<Logo variant="icon" size="lg" />
 ```
 
-For dark navigation/header:
+Or use a raw file directly:
 
-```jsx
-<img src="/brand/fitpulse-logo-dark.svg" alt="FitPulse" />
+```tsx
+<Image src="/assets/fitpulse-fp-monogram.svg" alt="FitPulse" width={35} height={36} />
 ```
 
-For favicon:
+For favicon (already declared in `src/app/layout.tsx`):
 
 ```html
-<link rel="icon" type="image/svg+xml" href="/brand/favicon.svg" />
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
 ```
 
-The SVG icon is the preferred source because it scales cleanly on web and retina displays.
+SVG is the preferred source — scales cleanly on web and retina.
 
 ## Included
-- `fitpulse-icon.svg` — transparent FP monogram
-- `fitpulse-logo.svg` — light-background horizontal lockup
-- `fitpulse-logo-dark.svg` — dark-background horizontal lockup
-- `favicon.svg` — browser/app icon source
-- PNG app icons in common sizes
-- `apple-touch-icon.png` — iOS home-screen icon
-- `og-image.png` — social sharing image
-- `site-header-preview.png` — quick visual reference
 
-Use the SVG files wherever possible. PNGs are supplied for platforms that specifically require raster images.
+**Monogram (primary mark)**
+- `fitpulse-fp-monogram.svg` — dark on transparent, viewBox 1000×1040
+- `fitpulse-fp-monogram-white.svg` — light on transparent (dark backgrounds)
+- `fitpulse-fp-monogram-{512,1024,2048}.png` — raster fallbacks
+- `fitpulse-fp-monogram-white-1024.png`
+
+**Favicons + app icons**
+- `favicon.svg`, `favicon.ico`
+- `icon-{16,32,48,64,128,180,192,256,512}.png`
+- `apple-touch-icon.png` (180×180)
+
+The `Logo` component composes the monogram with a text wordmark rather than
+shipping a separate horizontal lockup — this keeps the wordmark crisp at any
+size and lets us tweak type without regenerating assets.

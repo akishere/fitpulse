@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
+import { signOut } from "@/lib/auth/sign-out";
 import {
   Home,
   UtensilsCrossed,
@@ -28,23 +29,27 @@ const NAV = [
 
 export function Sidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const profile = useUserStore((s) => s.profile);
-  const reset = useUserStore((s) => s.reset);
   const isAdmin = profile?.role === "admin";
+
+  async function handleSignOut() {
+    await signOut();
+    router.replace("/login");
+  }
 
   return (
     <aside className="hidden md:flex fixed inset-y-0 left-0 w-64 flex-col border-r border-border/50 bg-bg-primary/60 backdrop-blur-xl px-4 py-6">
       <Link href="/dashboard" className="mb-8 flex items-center gap-3 px-2">
-        <div className="relative h-9 w-9 shrink-0">
-          <Image
-            src="/assets/fitpulse-icon.svg"
-            alt="FitPulse"
-            fill
-            className="object-contain"
-            priority
-          />
-        </div>
-        <div className="flex flex-col">
+        <Image
+          src="/assets/fitpulse-fp-monogram.svg"
+          alt="FitPulse"
+          width={35}
+          height={36}
+          priority
+          className="shrink-0 drop-shadow-[0_0_18px_hsla(218_100%_66%_/_0.35)]"
+        />
+        <div className="flex flex-col leading-tight">
           <span className="text-lg font-bold tracking-tight">FitPulse</span>
           <span className="text-[10px] uppercase tracking-widest text-text-tertiary">
             Personal fitness
@@ -114,7 +119,7 @@ export function Sidebar() {
             </div>
           </div>
           <button
-            onClick={() => reset()}
+            onClick={handleSignOut}
             className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg bg-bg-card-hover px-3 py-2 text-xs text-text-secondary hover:text-text-primary transition-colors"
           >
             <LogOut className="h-3.5 w-3.5" />
